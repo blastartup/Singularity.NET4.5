@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{350F5C90-F18F-41A9-8B84-92E0CA74D619}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Singularity</RootNamespace>
+    <AssemblyName>Singularity</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>Singularity.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>Singularity.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Attributes\TimeSpanAttribute.cs" />
+    <Compile Include="Collections\WordCollection.cs" />
+    <Compile Include="Converters\BaseNTypeConverter.cs" />
+    <Compile Include="EnumAdditional\EnumAdditionalAttribute.cs" />
+    <Compile Include="EnumAdditional\EnumAdditionalProvider.cs" />
+    <Compile Include="EnumAdditional\EnumUtil.cs" />
+    <Compile Include="Enums\DistanceUnit.cs" />
+    <Compile Include="Enums\EBoolWordStyle.cs" />
+    <Compile Include="Enums\ECommandArgumentValueTypes.cs" />
+    <Compile Include="Enums\EDateTimeFormatTypes.cs" />
+    <Compile Include="Enums\EDateTimeIntervalTypes.cs" />
+    <Compile Include="Enums\EDaysOfWeekTypes.cs" />
+    <Compile Include="Enums\EFixedResponseTypes.cs" />
+    <Compile Include="Enums\EListCapacityType.cs" />
+    <Compile Include="Enums\EMemoryUOMTypes.cs" />
+    <Compile Include="Enums\ESearchTypes.cs" />
+    <Compile Include="Enums\EShortDaysOfWeekTypes.cs" />
+    <Compile Include="Enums\ESurroundType.cs" />
+    <Compile Include="Enums\ETemporalGroupFlag.cs" />
+    <Compile Include="Enums\ETimePeriodRelationshipType.cs" />
+    <Compile Include="ErrorHandling\BaseFaultManager.cs" />
+    <Compile Include="ErrorHandling\ErrorMemo.cs" />
+    <Compile Include="ErrorHandling\ExceptionMemo.cs" />
+    <Compile Include="Extensions\ArrayExtension.cs" />
+    <Compile Include="Extensions\BooleanExtension.cs" />
+    <Compile Include="Extensions\CharExtension.cs" />
+    <Compile Include="Extensions\CultureInfoExtension.cs" />
+    <Compile Include="Extensions\DateTimeExtension.cs" />
+    <Compile Include="Extensions\DecimalExtension.cs" />
+    <Compile Include="Extensions\DirectoryInfoExtension.cs" />
+    <Compile Include="Extensions\DoubleExtension.cs" />
+    <Compile Include="Extensions\EnumExtension.cs" />
+    <Compile Include="Extensions\ExceptionExtension.cs" />
+    <Compile Include="Extensions\FileInfoExtension.cs" />
+    <Compile Include="Extensions\ICollectionExtension.cs" />
+    <Compile Include="Extensions\IComparableExtension.cs" />
+    <Compile Include="Extensions\IEnumerableExtension.cs" />
+    <Compile Include="Extensions\IntCollectionStatsExtension.cs" />
+    <Compile Include="Extensions\ListExtension.cs" />
+    <Compile Include="Extensions\IListExtension.cs" />
+    <Compile Include="Extensions\IntExtension.cs" />
+    <Compile Include="Extensions\NameValueCollectionExtension.cs" />
+    <Compile Include="Extensions\ObjectExtension.cs" />
+    <Compile Include="Extensions\MemberInfoExtension.cs" />
+    <Compile Include="Extensions\StringExtension.cs" />
+    <Compile Include="Extensions\TimeSpanExtension.cs" />
+    <Compile Include="Extensions\TimeZoneInfoExtension.cs" />
+    <Compile Include="Extensions\TypeExtension.cs" />
+    <Compile Include="Factory.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Interfaces\ICacheProvider.cs" />
+    <Compile Include="Interfaces\ICommand.cs" />
+    <Compile Include="Interfaces\ICloneable.cs" />
+    <Compile Include="Interfaces\IContextProvider.cs" />
+    <Compile Include="Interfaces\IDateTimeProvider.cs" />
+    <Compile Include="Interfaces\IExceptionLog.cs" />
+    <Compile Include="Interfaces\IFaultManager.cs" />
+    <Compile Include="Interfaces\IFixedCondition.cs" />
+    <Compile Include="Interfaces\INotification.cs" />
+    <Compile Include="Interfaces\ICondition.cs" />
+    <Compile Include="Interfaces\IReply.cs" />
+    <Compile Include="Interfaces\IRoundingProvider.cs" />
+    <Compile Include="Interfaces\IStateAged.cs" />
+    <Compile Include="Interfaces\IStateValid.cs" />
+    <Compile Include="Interfaces\IStateEmpty.cs" />
+    <Compile Include="Interfaces\ITraceLog.cs" />
+    <Compile Include="Interfaces\IUnitOfMeasure.cs" />
+    <Compile Include="PowerWords.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\CommandLineParser.cs" />
+    <Compile Include="Providers\Words.cs" />
+    <Compile Include="Types\Cacher.cs" />
+    <Compile Include="Providers\SystemClock.cs" />
+    <Compile Include="Providers\RandomProvider.cs" />
+    <Compile Include="Providers\RoundingProvider.cs" />
+    <Compile Include="Providers\VerhoeffCheckDigit.cs" />
+    <Compile Include="Types\AssemblyInfo.cs" />
+    <Compile Include="Types\CodeRegion.cs" />
+    <Compile Include="Types\ConciseAssembler.cs" />
+    <Compile Include="Types\FixedResponse.cs" />
+    <Compile Include="Types\MemoryCacher.cs" />
+    <Compile Include="Types\StaticCache.cs" />
+    <Compile Include="Replies\Reply.cs" />
+    <Compile Include="Replies\ReplyErrorMessage.cs" />
+    <Compile Include="Replies\ReplyInteger.cs" />
+    <Compile Include="Replies\ReplyMessage.cs" />
+    <Compile Include="Replies\ReplySimple.cs" />
+    <Compile Include="Resources\ResourcesManager.cs" />
+    <Compile Include="Strategies\Retry\Retry.cs" />
+    <Compile Include="Strategies\Retry\RetryCountedStrategry.cs" />
+    <Compile Include="Strategies\Retry\RetryStrategry.cs" />
+    <Compile Include="Strategies\Retry\RetryTimedFrequencyStrategry.cs" />
+    <Compile Include="Strategies\Stray\Stray.cs" />
+    <Compile Include="Strategies\Stray\StrayBarcodeStrategy.cs" />
+    <Compile Include="Strategies\Stray\StrayComboNumberFwFmtStrategy.cs" />
+    <Compile Include="Strategies\Stray\StrayComboNumberFwStrategy.cs" />
+    <Compile Include="Strategies\Stray\StrayPrefixedCodeStrategy.cs" />
+    <Compile Include="Strategies\Stray\StrayStrategy.cs" />
+    <Compile Include="Strategies\Stray\StrayTransactionNumberStrategy.cs" />
+    <Compile Include="Providers\DelimitedStringBuilder.cs" />
+    <Compile Include="TimeSpanArticulator.cs" />
+    <Compile Include="ValueLib.cs" />
+    <Compile Include="ValueTypes\BaseN.cs" />
+    <Compile Include="ValueTypes\BoolWord.cs" />
+    <Compile Include="ValueTypes\Coord.cs" />
+    <Compile Include="ValueTypes\DecimalUnit.cs" />
+    <Compile Include="ValueTypes\DoubleUnit.cs" />
+    <Compile Include="ValueTypes\IntUnit.cs" />
+    <Compile Include="ValueTypes\JsonDateTime.cs" />
+    <Compile Include="ValueTypes\KeyValuePairs.cs" />
+    <Compile Include="ValueTypes\NonNullable.cs" />
+    <Compile Include="ValueTypes\Notification.cs" />
+    <Compile Include="ValueTypes\Position.cs" />
+    <Compile Include="ValueTypes\Radial.cs" />
+    <Compile Include="ValueTypes\SearchWordAndType.cs" />
+    <Compile Include="ValueTypes\SortElement.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Resources\eng_ShortNoTitleCaseWords.dic" />
+    <None Include="Singularity.ruleset" />
+    <None Include="_CreateNewNuGetPackage\Config.ps1" />
+    <None Include="_CreateNewNuGetPackage\DoNotModify\CreateNuGetPackage.ps1" />
+    <None Include="_CreateNewNuGetPackage\DoNotModify\New-NuGetPackage.ps1" />
+    <None Include="_CreateNewNuGetPackage\DoNotModify\UploadNuGetPackage.ps1" />
+    <None Include="_CreateNewNuGetPackage\RunMeToUploadNuGetPackage.cmd" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\CommandLineParser.de-DE.resx" />
+    <EmbeddedResource Include="Resources\CommandLineParser.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="_CreateNewNuGetPackage\DoNotModify\NuGet.exe" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>REM Create a NuGet package for this project and place the .nupkg file in the project's output directory.
+REM If you see this in Visual Studio's Error List window, check the Output window's Build tab for the actual error.
+ECHO Creating NuGet package in Post-Build event...
+PowerShell -NoProfile -ExecutionPolicy Bypass -Command "&amp; '$(ProjectDir)_CreateNewNuGetPackage\DoNotModify\CreateNuGetPackage.ps1' -ProjectFilePath '$(ProjectPath)' -OutputDirectory '$(TargetDir)' -BuildConfiguration '$(ConfigurationName)' -BuildPlatform '$(PlatformName)'"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
