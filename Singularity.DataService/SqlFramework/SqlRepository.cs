@@ -18,7 +18,7 @@ namespace Singularity.DataService.SqlFramework
 			Context = context;
 		}
 
-		public virtual List<TSqlEntity> GetList(String filter = "", SqlParameter[] filterParameters = null, String selectColumns = null, 
+		public virtual List<TSqlEntity> GetList(String filter = "", SqlParameter[] filterParameters = null, String selectColumns = null,
 			String orderBy = null, Paging paging = null)
 		{
 			if (paging != null && orderBy == null)
@@ -78,6 +78,27 @@ namespace Singularity.DataService.SqlFramework
 			}
 
 			InsertCore(sqlEntity, InsertColunms(), GetInsertValues(sqlEntity));
+		}
+
+		public void IdentityInsert(TSqlEntity sqlEntity)
+		{
+			if (SaveChangesTransactionally)
+			{
+				Context.BeginTransaction();
+			}
+
+			IModifiable modifiableEntity = sqlEntity as IModifiable;
+			if (modifiableEntity != null)
+			{
+				modifiableEntity.CreatedDate = NowDateTime;
+				modifiableEntity.ModifiedDate = NowDateTime;
+			}
+			else if (sqlEntity is ICreatable)
+			{
+				((ICreatable)sqlEntity).CreatedDate = NowDateTime;
+			}
+
+			IdentityInsertCore(sqlEntity, InsertColunms(), GetInsertValues(sqlEntity));
 		}
 
 		public virtual void Update(TSqlEntity sqlEntity)
@@ -152,18 +173,13 @@ namespace Singularity.DataService.SqlFramework
 		{
 			SqlCommand cmd = new SqlCommand($"Set Identity_Insert dbo.{TableName} On", Context.SqlConnection);
 			cmd.ExecuteNonQuery();
-			_identityInsert = true;
 		}
 
 		public void IdentityInsertOff()
 		{
 			SqlCommand cmd = new SqlCommand($"Set Identity_Insert dbo.{TableName} Off", Context.SqlConnection);
 			cmd.ExecuteNonQuery();
-			_identityInsert = false;
 		}
-
-		public Boolean IdentityInsert => _identityInsert;
-		private Boolean _identityInsert;
 
 		//public virtual void Deactivate(Object id)
 		//{
@@ -221,7 +237,7 @@ namespace Singularity.DataService.SqlFramework
 
 		public abstract void Delete(TSqlEntity entityToDelete);
 
-		protected SqlDataReader SelectQuery(String selectColumns, String fromTables, String join = "", String filter = "", SqlParameter[] filterParameters = null, String orderBy = null, 
+		protected SqlDataReader SelectQuery(String selectColumns, String fromTables, String join = "", String filter = "", SqlParameter[] filterParameters = null, String orderBy = null,
 			Paging paging = null)
 		{
 			String query = null;
@@ -238,7 +254,7 @@ namespace Singularity.DataService.SqlFramework
 
 			if (filterParameters == null)
 			{
-				filterParameters = new SqlParameter[] {};
+				filterParameters = new SqlParameter[] { };
 			}
 
 			if (!String.IsNullOrEmpty(orderBy))
@@ -263,7 +279,15 @@ namespace Singularity.DataService.SqlFramework
 		protected void InsertCore(TSqlEntity sqlEntity, String insertColumns, String insertValues)
 		{
 			String insertStatement = InsertColumnsPattern.FormatX(TableName, insertColumns, insertValues);
-			SetEntityPrimaryKey(sqlEntity, Context.ExecScalar(insertStatement, new SqlParameter[] {}));
+			SetEntityPrimaryKey(sqlEntity, Context.ExecScalar(insertStatement, new SqlParameter[] { }));
+		}
+
+		private void IdentityInsertCore(TSqlEntity sqlEntity, String insertColumns, String insertValues)
+		{
+			insertColumns = $"{GetIdentityInsertColumns()},{insertColumns}";
+			insertValues = $"{GetIdentityInsertValues(sqlEntity)},{insertValues}";
+			String insertStatement = IdentityInsertColumnsPattern.FormatX(TableName, insertColumns, insertValues, TableName);
+			Context.ExecScalar(insertStatement, new SqlParameter[] { });
 		}
 
 		protected void UpdateCore(TSqlEntity sqlEntity, String updateColumnValuePairs, String updateKeyColumValuePair)
@@ -344,12 +368,24 @@ namespace Singularity.DataService.SqlFramework
 		protected abstract String TableName { get; }
 		protected abstract String PrimaryKeyName { get; }
 		protected abstract String InsertColunms();
+
+		protected virtual String GetIdentityInsertColumns()
+		{
+			return $"[{PrimaryKeyName}]";
+		}
+
+		protected virtual String GetIdentityInsertValues(TSqlEntity sqlEntity)
+		{
+			return String.Empty;
+		}
+
 		protected abstract String GetInsertValues(TSqlEntity sqlEntity);
 		protected abstract String GetUpdateColumnValuePairs(TSqlEntity sqlEntity);
 		protected abstract String GetUpdateKeyColumnValuePair(TSqlEntity sqlEntity);
 		protected abstract void SetEntityPrimaryKey(TSqlEntity sqlEntity, Object newPrimaryKey);
 
 		protected const String UpdateColumnValuePattern = "{0} = {1}";
+		private const String IdentityInsertColumnsPattern = "Set Identity_Insert dbo.{3} On; Insert [{0}] ({1}) Values({2}); Set Identity_Insert dbo.{3} Off";
 		private const String InsertColumnsPattern = "Insert [{0}] ({1}) Values({2}) SELECT @@IDENTITY";
 		private const String UpdateColumnsPattern = "Update [{0}] Set {1} Where {2}";
 		private const String StringValuePattern = "'{0}'";
