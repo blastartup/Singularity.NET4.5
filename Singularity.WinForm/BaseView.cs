@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using Singularity;
-using Singularity.WinForm;
 
-// ReSharper disable once CheckNamespace
-namespace TurbineEncoreDesignerView.Views
+namespace Singularity.WinForm
 {
 	public abstract class BaseView : INotifyPropertyChanging, INotifyPropertyChanged
 	{
