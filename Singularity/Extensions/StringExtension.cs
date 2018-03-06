@@ -10,7 +10,9 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Security;
 using System.Security.Cryptography;
+using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -26,9 +28,9 @@ namespace Singularity
 	public static class StringExtension
 	{
 		/// <summary>
-		/// Given a string in CamelCase, return the string by inserting a space between each captilised word. eg: "Camel Case"
+		/// Given a string in CamelCase, return the string by inserting a space between each capitalised word. eg: "Camel Case"
 		/// </summary>
-		/// <param name="pascelCaseToken">String with expected pascel casing eg: "PascelCased".</param>
+		/// <param name="pascelCaseToken">String with expected pascal casing eg: "PascelCased".</param>
 		/// <returns>A spaced out string of words.</returns>
 		public static String Humanise(this String pascelCaseToken)
 		{
@@ -54,7 +56,7 @@ namespace Singularity
 		/// </summary>
 		/// <param name="template">The string template to be processed</param>
 		/// <param name="model">A composite object to supply template parameters. Only public non-indexed properties</param>
-		/// <param name="beginTag">An optional string for the begining tag characters. Default is "{{"</param>
+		/// <param name="beginTag">An optional string for the beginning tag characters. Default is "{{"</param>
 		/// <param name="endTag">An optional string for the ending tag characters. Default is "}}"</param>
 		/// <returns></returns>
 		public static String FormatWith(this String template, Object model, String beginTag = "{{", String endTag = "}}")
@@ -255,8 +257,8 @@ namespace Singularity
 		/// <summary>
 		/// Split the current string into segments.
 		/// </summary>
-		/// <param name="segmentLength" type="int">Length of substrings to return.</param>
-		/// <returns>A list of substrings of given segment length.</returns>
+		/// <param name="segmentLength" type="int">Length of sub-strings to return.</param>
+		/// <returns>A list of sub-strings of given segment length.</returns>
 		public static IList<String> Split(this String input, Int32 segmentLength)
 		{
 			List<String> result = new List<String>();
@@ -271,7 +273,7 @@ namespace Singularity
 		/// <summary>
 		/// Split the delimited current string safely.
 		/// </summary>
-		/// <returns>A list of substrings of given segment length.</returns>
+		/// <returns>A list of sub-strings of given segment length.</returns>
 		public static IList<String> SplitSafe(this String input, params Char[] seperator)
 		{
 			List<String> result = new List<String>();
@@ -310,12 +312,12 @@ namespace Singularity
 		}
 
 		/// <summary>
-		/// Truncate a string from either the start or end upon the locating the first occurance of a given character.
+		/// Truncate a string from either the start or end upon the locating the first occurrence of a given character.
 		/// </summary>
 		/// <param name="value">String to truncate.</param>
 		/// <param name="firstOccuranceOf">Character to locate in the String to mark the truncation point.</param>
-		/// <param name="fromLeft">If true cut the beginning of the string when the first occurance of the character is located from the left, 
-		/// otherwise cut the end of the string when the first occurance of the character is located from the end.</param>
+		/// <param name="fromLeft">If true cut the beginning of the string when the first occurrence of the character is located from the left, 
+		/// otherwise cut the end of the string when the first occurrence of the character is located from the end.</param>
 		/// <returns>Truncated string if cutting length is shorter than the original string, otherwise an empty string is returned.</returns>
 		public static String Cut(this String value, Char firstOccuranceOf, Boolean fromLeft = true)
 		{
@@ -342,7 +344,7 @@ namespace Singularity
 		/// <summary>
 		/// Get the certain left most number of characters from a given string.
 		/// </summary>
-		/// <param name="value">String from which to extract a substring.</param>
+		/// <param name="value">String from which to extract a sub-string.</param>
 		/// <param name="length">The left most number of characters required.</param>
 		/// <returns>A string of <paramref name="length"/> characters if all arguments are valid, else an empty string is returned.</returns>
 		[DebuggerStepThrough]
@@ -354,7 +356,7 @@ namespace Singularity
 		/// <summary>
 		/// Get the certain right most number of characters from a given string.
 		/// </summary>
-		/// <param name="value">String from which to extract a substring.</param>
+		/// <param name="value">String from which to extract a sub-string.</param>
 		/// <param name="length">The right most number of characters required.</param>
 		/// <returns>A string of <paramref name="length"/> characters if all arguments are valid, else an empty string is returned.</returns>
 		[DebuggerStepThrough]
@@ -364,9 +366,9 @@ namespace Singularity
 		}
 
 		/// <summary>
-		/// Get a substring from within a given string.
+		/// Get a sub-string from within a given string.
 		/// </summary>
-		/// <param name="input">String from which to extract a substring.</param>
+		/// <param name="input">String from which to extract a sub-string.</param>
 		/// <param name="startIndex">The first character position of the given string to extract from.</param>
 		/// <returns>A string of <paramref name="startIndex"/> characters if all arguments are valid, else an empty string is returned.</returns>
 		[DebuggerStepThrough]
@@ -376,9 +378,9 @@ namespace Singularity
 		}
 
 		/// <summary>
-		/// Get a substring from within a given string.
+		/// Get a sub-string from within a given string.
 		/// </summary>
-		/// <param name="input">String from which to extract a substring.</param>
+		/// <param name="input">String from which to extract a sub-string.</param>
 		/// <param name="startIndex">The first character position of the given string to extract from.</param>
 		/// <param name="length">The number of characters required.</param>
 		/// <returns>A string of <paramref name="length"/> characters if all arguments are valid, else an empty string is returned.</returns>
@@ -389,7 +391,7 @@ namespace Singularity
 		}
 
 		/// <summary>
-		/// A substring of this instance, from the specified position (empty if beyond the end of the string), up to the specified maximum length.
+		/// A sub-string of this instance, from the specified position (empty if beyond the end of the string), up to the specified maximum length.
 		/// </summary>
 		private static String SubstringCore(String input, Int32 startIndex, Int32 length)
 		{
@@ -438,7 +440,7 @@ namespace Singularity
 		/// <param name="nullableValue">A nullable first preference integer.</param>
 		/// <param name="replacementValue">The absolute non nullable integer.</param>
 		/// <returns>A first or second preference integer that is NOT null.</returns>
-		/// <remarks>Simply nest this method call if you want multiple fallbacks like a tertiary 
+		/// <remarks>Simply nest this method call if you want multiple fall backs like a tertiary 
 		/// preference eg: FallbackOnNull(firstPreint?, FallbackOnNull(seondPreint?, finalInt)) </remarks>
 		public static String ValueOnNull(this String nullableValue, String replacementValue)
 		{
@@ -1623,7 +1625,7 @@ namespace Singularity
 		}
 
 		/// <summary>
-		/// Replaces all occurences of chars with separator. Contiguous chars are replaced with a single separator
+		/// Replaces all occurrences of chars with separator. Contiguous chars are replaced with a single separator
 		/// </summary>
 		/// <param name="src"></param>
 		/// <param name="chars"></param>
@@ -1790,10 +1792,10 @@ namespace Singularity
 		}
 
 		/// <summary>
-		/// Binary Serialization to a stream
+		/// Binary Serialisation to a stream
 		/// </summary>
 		/// <param name="value"></param>
-		/// <param name="stream">The file where serialized data has to be stored</param>
+		/// <param name="stream">The file where serialised data has to be stored</param>
 		public static void Serialize(this String value, Stream stream)
 		{
 			try
@@ -1852,7 +1854,7 @@ namespace Singularity
 		/// <summary>
 		/// Wraps the passed string onto a new line, when each line length exceeds a given total number of characters.
 		/// Wraps the passed string at the passed total number of characters (if cuttOff is true)
-		/// or at the next whitespace (if cutOff is false). 
+		/// or at the next white-space (if cutOff is false). 
 		/// </summary>
 		/// <param name="val"></param>
 		/// <param name="charCount">The maximum number of characters per line.  This value must be 1 or greater characters.</param>
@@ -1922,6 +1924,31 @@ namespace Singularity
 			return regex.IsMatch(val);
 		}
 
+		public static Boolean HavePermissionsOnRegistryKey(this String key, RegistryPermissionAccess accesslevel)
+		{
+			try
+			{
+				var registryPermission = new RegistryPermission(accesslevel, key);
+				registryPermission.Demand();
+			}
+			catch (SecurityException)
+			{
+				return false;
+			}
+
+			return true;
+		}
+
+		public static Boolean RegistryKeyCanWrite(this String key)
+		{
+			return key.HavePermissionsOnRegistryKey(RegistryPermissionAccess.Write);
+		}
+
+		public static Boolean RegistryKeyCanRead(this String key)
+		{
+			return key.HavePermissionsOnRegistryKey(RegistryPermissionAccess.Read);
+		}
+
 		/// <summary>
 		/// Checks if the string is a valid URI
 		/// Test Coverage: Included
@@ -1970,7 +1997,7 @@ namespace Singularity
 		public static Boolean IsPalindrome(this String val)
 		{
 			if (val.IsEmpty()) return false;
-			return val.ToLower() == val.ToString().ToLower().Reverse();
+			return val.ToLower() == val.ToLower().Reverse();
 		}
 
 		/// <summary>
@@ -1980,7 +2007,7 @@ namespace Singularity
 		/// <returns>Base 64 Encoded string</returns>
 		public static String ToBase64String(this String val)
 		{
-			Byte[] toEncodeAsBytes = ASCIIEncoding.ASCII.GetBytes(val);
+			Byte[] toEncodeAsBytes = Encoding.ASCII.GetBytes(val);
 			String returnValue = Convert.ToBase64String(toEncodeAsBytes);
 			return returnValue;
 		}
@@ -1993,7 +2020,7 @@ namespace Singularity
 		public static String FromBase64String(this String val)
 		{
 			Byte[] encodedDataAsBytes = Convert.FromBase64String(val);
-			String returnValue = ASCIIEncoding.ASCII.GetString(encodedDataAsBytes);
+			String returnValue = Encoding.ASCII.GetString(encodedDataAsBytes);
 			return returnValue;
 		}
 
@@ -2080,6 +2107,29 @@ namespace Singularity
 			return Encoding.UTF8.GetString(plainTextBytes, 0, decryptedByteCount);
 		}
 
+		/// <summary>Determine if two strings start the same.</summary>
+		/// <returns>True if both strings start the same</returns>
+		public static Boolean StartsTheSameAs(this String primaryValue, String comparingValue)
+		{
+			var minLength = Math.Min(primaryValue.Length, comparingValue.Length);
+			var maxLength = Math.Min(primaryValue.Length, comparingValue.Length);
+			if (maxLength - minLength > 1 || minLength == 0)
+			{
+				return false;
+			}
+
+			var count = 0;
+			while (count < minLength)
+			{
+				if (primaryValue[count] != comparingValue[count])
+				{
+					break;
+				}
+				count++;
+			}
+			return (count == minLength && minLength == maxLength - 1) || (count == minLength - 1 && minLength == maxLength);
+		}
+
 		/// <summary>
 		/// Removes all HTML tags from the passed string.
 		/// Test Coverage: Included
@@ -2106,7 +2156,7 @@ namespace Singularity
 
 		public static String RemoveNoise(this String value)
 		{
-			String safeValue = value != null ? value : String.Empty;
+			String safeValue = value ?? String.Empty;
 			StringBuilder sb = new StringBuilder(safeValue.Length);
 			foreach (Char c in safeValue)
 			{
@@ -2125,7 +2175,7 @@ namespace Singularity
 		/// <returns></returns>
 		public static String ReplaceNoise(this String value)
 		{
-			String safeValue = value != null ? value : String.Empty;
+			String safeValue = value ?? String.Empty;
 			StringBuilder sb = new StringBuilder(safeValue.Length);
 			foreach (Char c in safeValue)
 			{
@@ -2163,10 +2213,8 @@ namespace Singularity
 			{
 				return String.Empty;
 			}
-			else
-			{
-				annulWords.ForEach(w => value = value.Replace(w, ValueLib.Space.StringValue));
-			}
+
+			annulWords.ForEach(w => value = value.Replace(w, ValueLib.Space.StringValue));
 			return value;
 		}
 
@@ -2249,7 +2297,7 @@ namespace Singularity
 
 			time = time.Trim();
 
-			String pattern = @"^\d{1,2}:\d\d(:\d\d){0,1}$";
+			const String pattern = @"^\d{1,2}:\d\d(:\d\d){0,1}$";
 			Regex regex = new Regex(pattern);
 			Match match = regex.Match(time);
 			if (!match.Success)
@@ -2337,6 +2385,7 @@ namespace Singularity
 
 			return (2.0 * intersection) / union;
 		}
+
 		/// <summary>
 		/// Gets all letter pairs for each
 		/// individual word in the string
@@ -2345,27 +2394,11 @@ namespace Singularity
 		/// <returns></returns>
 		private static IList<String> WordLetterPairs(String str)
 		{
-			IList<String> allPairs = new List<String>();
-
 			// Tokenize the string and put the tokens/words into an array
 			String[] words = Regex.Split(str, @"\s");
 
 			// For each word
-			for (Int32 w = 0; w < words.Length; w++)
-			{
-				if (!String.IsNullOrEmpty(words[w]))
-				{
-					// Find the pairs of characters
-					String[] pairsInWord = LetterPairs(words[w]);
-
-					for (Int32 p = 0; p < pairsInWord.Length; p++)
-					{
-						allPairs.Add(pairsInWord[p]);
-					}
-				}
-			}
-
-			return allPairs;
+			return words.Where(word => !String.IsNullOrEmpty(word)).SelectMany(LetterPairs).ToList();
 		}
 
 		/// <summary>

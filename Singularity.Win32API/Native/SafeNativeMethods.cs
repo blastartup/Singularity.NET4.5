@@ -1,6 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
-
+// ReSharper disable All
 namespace Singularity.Win32API
 {
 	public class SafeNativeMethods

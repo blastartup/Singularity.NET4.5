@@ -6,16 +6,16 @@ namespace Singularity
 	public enum EMemoryUomTypes : byte
 	{
 		[EnumAdditional("b", "bit")]
-		b,
+		bit,
 		[EnumAdditional("B", "Byte")]
 		B,
 		[EnumAdditional("KB", "KiloByte")]
-		Kb,
+		KB,
 		[EnumAdditional("MB", "MegaByte")]
-		Mb,
+		MB,
 		[EnumAdditional("GB", "GigaByte")]
-		Gb,
+		GB,
 		[EnumAdditional("TB", "TerraByte")]
-		Tb
+		TB
 	}
 }

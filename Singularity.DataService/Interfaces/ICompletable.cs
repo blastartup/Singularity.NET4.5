@@ -6,6 +6,6 @@ namespace Singularity.DataService
 {
 	public interface ICompletable : ICreatable
 	{
-		DateTime CompletedDate { get; set; }
+		DateTime? CompletedDate { get; set; }
 	}
 }

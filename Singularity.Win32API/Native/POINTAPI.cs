@@ -1,6 +1,6 @@
-﻿
-using System;
+﻿using System;
 
+// ReSharper disable once CheckNamespace
 namespace Singularity.Win32API
 {
 	internal struct Pointapi

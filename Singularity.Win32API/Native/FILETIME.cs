@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
+// ReSharper disable once CheckNamespace
 namespace Singularity.Win32API
 {
 	[StructLayout(LayoutKind.Sequential)]

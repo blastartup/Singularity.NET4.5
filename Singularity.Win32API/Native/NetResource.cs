@@ -2,7 +2,6 @@
 using System.Runtime.InteropServices;
 
 // ReSharper disable once CheckNamespace
-
 namespace Singularity.Win32API
 {
 	#region Objects needed for the Win32 functions

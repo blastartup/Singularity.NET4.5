@@ -6,6 +6,6 @@ namespace Singularity.DataService
 {
 	public interface IItemisable
 	{
-		Int32 LineNumber { get; set; }
+		Int32 Sequence { get; set; }
 	}
 }

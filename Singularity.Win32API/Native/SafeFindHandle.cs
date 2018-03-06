@@ -2,6 +2,7 @@
 using System.Security.Permissions;
 using Microsoft.Win32.SafeHandles;
 
+// ReSharper disable once CheckNamespace
 namespace Singularity.Win32API
 {
 	/// <summary>

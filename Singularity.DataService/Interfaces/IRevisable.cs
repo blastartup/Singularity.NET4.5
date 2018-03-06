@@ -4,7 +4,7 @@
 
 namespace Singularity.DataService
 {
-	public interface IRevisable : ICreatable
+	public interface IRevisable : IModifiable
 	{
 		Boolean IsCurrent { get; set; }
 	}
