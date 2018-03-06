@@ -136,7 +136,7 @@ namespace Singularity.DataService.SqlFramework
 			}
 
 			query = "Select Count(*) from {0}{1}".FormatX(FromTables(), filter);
-			return Context.ExecScalar(query, filterParameters).ToInt64();
+			return Context.ExecuteScalar(query, filterParameters).ToInt64();
 		}
 
 		public Boolean Any(String filter = "", SqlParameter[] filterParameters = null)
@@ -273,13 +273,13 @@ namespace Singularity.DataService.SqlFramework
 			}
 
 			query = $"select {takeFilter}{selectColumns} from {fromTables}{join}{filter}{orderBy}";
-			return Context.ExecDataReader(query, filterParameters);
+			return Context.ExecuteDataReader(query, filterParameters);
 		}
 
 		protected void InsertCore(TSqlEntity sqlEntity, String insertColumns, String insertValues)
 		{
 			String insertStatement = InsertColumnsPattern.FormatX(TableName, insertColumns, insertValues);
-			SetEntityPrimaryKey(sqlEntity, Context.ExecScalar(insertStatement, new SqlParameter[] { }));
+			SetEntityPrimaryKey(sqlEntity, Context.ExecuteScalar(insertStatement, new SqlParameter[] { }));
 		}
 
 		private void IdentityInsertCore(TSqlEntity sqlEntity, String insertColumns, String insertValues)
@@ -287,14 +287,14 @@ namespace Singularity.DataService.SqlFramework
 			insertColumns = $"{GetIdentityInsertColumns()},{insertColumns}";
 			insertValues = $"{GetIdentityInsertValues(sqlEntity)},{insertValues}";
 			String insertStatement = IdentityInsertColumnsPattern.FormatX(TableName, insertColumns, insertValues, TableName);
-			Context.ExecScalar(insertStatement, new SqlParameter[] { });
+			Context.ExecuteScalar(insertStatement, new SqlParameter[] { });
 		}
 
 		protected void UpdateCore(TSqlEntity sqlEntity, String updateColumnValuePairs, String updateKeyColumValuePair)
 		{
 			// NB: Don't need to update the primary key because it doesn't change nor is returned from an Update SQL query.
 			String updateStatement = UpdateColumnsPattern.FormatX(TableName, updateColumnValuePairs, updateKeyColumValuePair);
-			Context.ExecScalar(updateStatement, new SqlParameter[] { });
+			Context.ExecuteScalar(updateStatement, new SqlParameter[] { });
 		}
 
 		protected virtual String SelectAllColunms()

@@ -21,7 +21,7 @@ namespace Singularity.DataService.SqlFramework
 			_transactionCounter = 0;
 		}
 
-		public SqlDataReader ExecDataReader(String query, SqlParameter[] filterParameters)
+		public SqlDataReader ExecuteDataReader(String query, SqlParameter[] filterParameters = null)
 		{
 			using (SqlCommand cmd = CreateCommand(query, CommandType.Text, filterParameters))
 			{
@@ -29,7 +29,7 @@ namespace Singularity.DataService.SqlFramework
 			}
 		}
 
-		public Object ExecScalar(String query, SqlParameter[] filterParameters)
+		public Object ExecuteScalar(String query, SqlParameter[] filterParameters = null)
 		{
 			using (SqlCommand cmd = CreateCommand(query, CommandType.Text, filterParameters))
 			{
@@ -37,7 +37,7 @@ namespace Singularity.DataService.SqlFramework
 			}
 		}
 
-		public Int32 ExecuteNonQuery(String query, SqlParameter[] filterParameters)
+		public Int32 ExecuteNonQuery(String query, SqlParameter[] filterParameters = null)
 		{
 			using (SqlCommand cmd = CreateCommand(query, CommandType.Text, filterParameters))
 			{
@@ -114,7 +114,10 @@ namespace Singularity.DataService.SqlFramework
 				CommandType = commandType,
 				Transaction = _sqlTransaction
 			};
-			sqlCommand.Parameters.AddRange(filterParameters);
+			if (filterParameters != null)
+			{
+				sqlCommand.Parameters.AddRange(filterParameters);
+			}
 			return sqlCommand;
 		}
 
