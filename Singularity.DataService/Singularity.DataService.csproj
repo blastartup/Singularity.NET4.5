@@ -51,7 +51,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\VersionInfo.cs">
+      <Link>VersionInfo.cs</Link>
+    </Compile>
     <Compile Include="Attributes\OriginallyKnownAsAttribute.cs" />
+    <Compile Include="DataServices\RowDataService.cs" />
+    <Compile Include="DataServices\TableDataService.cs" />
     <Compile Include="EntityFramework\EfDbContext.cs" />
     <Compile Include="EntityFramework\EfRepository.cs" />
     <Compile Include="EntityFramework\EfUnitOfWork.cs" />
@@ -73,6 +78,7 @@
     <Compile Include="Extensions\LinqExtentions.cs" />
     <Compile Include="Extensions\ObjectQueryExtenstion.cs" />
     <Compile Include="Extensions\DbTypeExtension.cs" />
+    <Compile Include="Extensions\SqlConnectionExtension.cs" />
     <Compile Include="Extensions\SqlConnectionStringBuilderExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Extensions\TypeExtension.cs" />

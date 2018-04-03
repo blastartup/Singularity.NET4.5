@@ -41,10 +41,10 @@ namespace Singularity.DataService.SqlFramework
 			return AssembleClassList(SelectQuery(selectColumns, FromTables(), String.Empty, FilterIn(ids), null, orderBy, paging));
 		}
 
-		public virtual TSqlEntity GetEntity(String filter = "", SqlParameter[] filterParameters = null, String selectColumns = null)
+		public virtual TSqlEntity GetEntity(String filter = "", SqlParameter[] filterParameters = null, String selectColumns = null, String orderBy = null)
 		{
 			selectColumns = selectColumns ?? SelectAllColunms();
-			return ReadAndAssembleClass(SelectQuery(selectColumns, FromTables(), String.Empty, filter, filterParameters, null, new Paging(1)));
+			return ReadAndAssembleClass(SelectQuery(selectColumns, FromTables(), String.Empty, filter, filterParameters, orderBy, new Paging(1)));
 		}
 
 		public TSqlEntity GetById(Object id, String selectColumns = null)
@@ -237,6 +237,35 @@ namespace Singularity.DataService.SqlFramework
 
 		public abstract void Delete(TSqlEntity entityToDelete);
 
+		public List<TSqlEntity> GetDuplicates(String filter = "", SqlParameter[] filterParameters = null)
+		{
+			if (filterParameters != null && filter == null)
+			{
+				throw new ArgumentException("FilterParameters can only be applied to a filtered result.");
+			}
+
+			if (ColumnsOfUniqueness.IsEmpty())
+			{
+				throw new InvalidOperationException("Indeterminate uniqueness.  ColumnOfUniqueness repository property not set.");
+			}
+
+			String dupeToOuterJoin = String.Join(" and ", ColumnsOfUniqueness.Split(ValueLib.Comma.CharValue).Select(v => $"o.{v} = dupes.{v}"));
+			String orderByWithPk = String.Join(", ", ColumnsOfUniqueness.Split(ValueLib.Comma.CharValue).Select(v => $"o.{v}")) + $", o.{PrimaryKeyName}";
+
+			if (!String.IsNullOrEmpty(filter))
+			{
+				filter = " where " + filter;
+			}
+
+			if (filterParameters == null)
+			{
+				filterParameters = new SqlParameter[] { };
+			}
+
+			String query = $"select {orderByWithPk} from {FromTables()} o inner join (select {ColumnsOfUniqueness} from {FromTables()} group by {ColumnsOfUniqueness} having count(*) > 1) dupes on {dupeToOuterJoin} {filter} order by {orderByWithPk}";
+			return AssembleClassList(Context.ExecuteDataReader(query, filterParameters));
+		}
+
 		protected SqlDataReader SelectQuery(String selectColumns, String fromTables, String join = "", String filter = "", SqlParameter[] filterParameters = null, String orderBy = null,
 			Paging paging = null)
 		{
@@ -316,6 +345,8 @@ namespace Singularity.DataService.SqlFramework
 		{
 			return new SqlParameter[] { new SqlParameter("@pk", primaryKeyValue) };
 		}
+
+		protected virtual String ColumnsOfUniqueness => String.Empty;
 
 		private String FilterIn<T>(IEnumerable<T> ids)
 		{

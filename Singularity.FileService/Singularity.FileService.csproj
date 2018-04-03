@@ -58,6 +58,7 @@
     <Compile Include="ReferenceTypes\SerialisedFileInfo.cs" />
     <Compile Include="ValueTypes\ContentAndFileType.cs" />
     <Compile Include="ValueTypes\FileContent.cs" />
+    <Compile Include="VersionInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

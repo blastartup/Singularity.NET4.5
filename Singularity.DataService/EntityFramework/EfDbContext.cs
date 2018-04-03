@@ -382,6 +382,9 @@ namespace Singularity.DataService
 
 		public Func<DbEntityEntry, IDictionary<Object, Object>, DbEntityValidationResult> ValidateEntryFunc { get; set; }
 
+		public SqlConnection SqlConnection => _sqlConnection ?? (_sqlConnection = new SqlConnection(Database.Connection.ConnectionString));
+		private SqlConnection _sqlConnection;
+
 		protected internal abstract DateTime Now { get; }
 	}
 }

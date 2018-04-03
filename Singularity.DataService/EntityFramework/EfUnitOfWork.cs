@@ -7,6 +7,7 @@ using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Linq.Expressions;
 
 // ReSharper disable once CheckNamespace
 namespace Singularity.DataService
@@ -74,6 +75,26 @@ namespace Singularity.DataService
 				ResetRepositories();
 			}
 			return result;
+		}
+
+		public void LoadReferenceIfRequired<TEntity, TEntityReference>(TEntity entity, Expression<Func<TEntity, TEntityReference>> property) 
+			where TEntity : class
+			where TEntityReference : class
+		{
+			if (!Context.Entry(entity).Reference(property).IsLoaded)
+			{
+				Context.Entry(entity).Reference(property).Load();
+			}
+		}
+
+		public void LoadCollectionIfRequired<TEntity, TEntityCollection>(TEntity entity, Expression<Func<TEntity, ICollection<TEntityCollection>>> collection) 
+			where TEntity : class 
+			where TEntityCollection : class
+		{
+			if (!Context.Entry(entity).Collection(collection).IsLoaded)
+			{
+				Context.Entry(entity).Collection(collection).Load();
+			}
 		}
 
 		public void Dispose()

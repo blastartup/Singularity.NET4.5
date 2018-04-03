@@ -2345,6 +2345,58 @@ namespace Singularity
 			return value.Replace(oldValue, String.Empty);
 		}
 
+		/// <summary>
+		/// Case insensitive Replace.
+		/// </summary>
+		/// <param name="original"></param>
+		/// <param name="pattern"></param>
+		/// <param name="replacement"></param>
+		/// <returns>Returns the original string with any found patterns replaced by the given replacement.</returns>
+		/// <remarks>Apparently faster than the Regex (ReplaceCaseInsensitive) version.</remarks>
+		public static String ReplaceEx(this String original, String pattern, String replacement)
+		{
+			Int32 count;
+			Int32 position0;
+			Int32 position1;
+			count = 0;
+			position0 = 0;
+			position1 = 0;
+
+			String upperString = original.ToUpper();
+			String upperPattern = pattern.ToUpper();
+			Int32 inc = (original.Length / pattern.Length) * (replacement.Length - pattern.Length);
+			Char[] chars = new Char[original.Length + Math.Max(0, inc)];
+			position1 = upperString.IndexOf(upperPattern, position0, StringComparison.OrdinalIgnoreCase);
+			while (position1 != -1)
+			{
+				for (Int32 idx = position0; idx <= position1 - 1; idx++)
+				{
+					chars[count] = original[idx];
+					count += 1;
+				}
+
+				for (Int32 idx = 0; idx <= replacement.Length - 1; idx++)
+				{
+					chars[count] = replacement[idx];
+					count += 1;
+				}
+
+				position0 = position1 + pattern.Length;
+				position1 = upperString.IndexOf(upperPattern, position0, StringComparison.OrdinalIgnoreCase);
+			}
+			if (position0 == 0)
+			{
+				return original;
+			}
+
+			for (Int32 idx = position0; idx <= original.Length - 1; idx++)
+			{
+				chars[count] = original[idx];
+				count += 1;
+			}
+			return new String(chars, 0, count);
+		}
+
 		public static String ToUpperSafe(this String value)
 		{
 			return value != null ? value.ToUpper() : null;

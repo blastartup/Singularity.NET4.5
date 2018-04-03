@@ -83,6 +83,20 @@ namespace Singularity.DataService
 			return null;
 		}
 
+		public virtual Boolean Exists(Object id)
+		{
+			if (id is Guid || id is Int32)
+			{
+				TEntity entity = DbSet.Find(id);
+				if (entity is IDeletable deletable && deletable.DeletedDate.HasValue)
+				{
+					return false;
+				}
+				return true;
+			}
+			return false;
+		}
+
 		public virtual Boolean Exists(Expression<Func<TEntity, Boolean>> filter)
 		{
 			return DbSet.Any(filter);

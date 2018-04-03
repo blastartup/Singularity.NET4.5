@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Singularity.DataService.Extensions;
 
 namespace Singularity.DataService.SqlFramework
 {
@@ -17,7 +18,7 @@ namespace Singularity.DataService.SqlFramework
 		{
 			_sqlConnectionStringBuilder = sqlConnectionStringBuilder;
 			_sqlConnection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
-			_sqlConnection.Open();
+			_sqlConnection.OpenEx(sqlConnectionStringBuilder.ConnectTimeout * 100);
 			_transactionCounter = 0;
 		}
 

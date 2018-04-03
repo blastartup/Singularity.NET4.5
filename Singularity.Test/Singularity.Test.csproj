@@ -61,6 +61,7 @@
     <Compile Include="TestClasses\ObjectExtensionTest.cs" />
     <Compile Include="TestClasses\StringExtension.cs" />
     <Compile Include="TestClasses\StringExtensionsTest.cs" />
+    <Compile Include="VersionInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Singularity\Singularity.csproj">

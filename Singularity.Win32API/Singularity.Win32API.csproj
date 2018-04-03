@@ -65,6 +65,7 @@
     <Compile Include="Providers\NetworkConnection.cs" />
     <Compile Include="Providers\NetworkLocationInfo.cs" />
     <Compile Include="Providers\SequentialGuidProvider.cs" />
+    <Compile Include="VersionInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Singularity\Singularity.csproj">
