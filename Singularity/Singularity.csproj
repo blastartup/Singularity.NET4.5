@@ -71,6 +71,7 @@
     <Compile Include="ErrorHandling\BaseFaultManager.cs" />
     <Compile Include="ErrorHandling\ErrorMemo.cs" />
     <Compile Include="ErrorHandling\ExceptionMemo.cs" />
+    <Compile Include="Extensions\ByteExtension.cs" />
     <Compile Include="Extensions\ArrayExtension.cs" />
     <Compile Include="Extensions\BooleanExtension.cs" />
     <Compile Include="Extensions\CharExtension.cs" />

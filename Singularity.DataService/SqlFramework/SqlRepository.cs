@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Singularity.DataService.SqlFramework
 {
@@ -80,13 +81,19 @@ namespace Singularity.DataService.SqlFramework
 			InsertCore(sqlEntity, InsertColunms(), GetInsertValues(sqlEntity));
 		}
 
-		public void IdentityInsert(TSqlEntity sqlEntity)
+		/// <summary>
+		/// An immediate identity insert with indentity_insert on just for this single entity, unless queued is true.  Queued identity insert entities are inserted if nothing given.
+		/// </summary>
+		/// <param name="sqlEntity"></param>
+		public void IdentityInsert(TSqlEntity sqlEntity = null, Boolean queued = false)
 		{
-			if (SaveChangesTransactionally)
+			if (sqlEntity == null)
 			{
-				Context.BeginTransaction();
+				FlushIdentityInserts();
+				return;
 			}
 
+			// Queue identity insert...
 			IModifiable modifiableEntity = sqlEntity as IModifiable;
 			if (modifiableEntity != null)
 			{
@@ -97,8 +104,31 @@ namespace Singularity.DataService.SqlFramework
 			{
 				((ICreatable)sqlEntity).CreatedDate = NowDateTime;
 			}
+			var insertColumns = $"{GetIdentityInsertColumns()},{InsertColunms()}";
+			var insertValues = $"{GetIdentityInsertValues(sqlEntity)},{GetInsertValues(sqlEntity)}";
+			QueuedIdentityInserts.Append(QueueIdentityInsertColumnsPattern.FormatX(TableName, insertColumns, insertValues));
 
-			IdentityInsertCore(sqlEntity, InsertColunms(), GetInsertValues(sqlEntity));
+			if (!queued)
+			{
+				FlushIdentityInserts();
+			}
+		}
+
+		public void FlushIdentityInserts()
+		{
+			if (QueuedIdentityInserts.IsEmpty())
+			{
+				return;
+			}
+
+			if (SaveChangesTransactionally)
+			{
+				Context.BeginTransaction();
+			}
+
+			String insertStatement = IdentityInsertColumnsPattern.FormatX(QueuedIdentityInserts.ToString(), TableName);
+			_queuedIdentityInserts = null;
+			Context.ExecuteScalar(insertStatement, new SqlParameter[] { });
 		}
 
 		public virtual void Update(TSqlEntity sqlEntity)
@@ -173,12 +203,14 @@ namespace Singularity.DataService.SqlFramework
 		{
 			SqlCommand cmd = new SqlCommand($"Set Identity_Insert dbo.{TableName} On", Context.SqlConnection);
 			cmd.ExecuteNonQuery();
+			EIdentityInsert = EIdentityInserts.TurnedOn;
 		}
 
 		public void IdentityInsertOff()
 		{
 			SqlCommand cmd = new SqlCommand($"Set Identity_Insert dbo.{TableName} Off", Context.SqlConnection);
 			cmd.ExecuteNonQuery();
+			EIdentityInsert = EIdentityInserts.TurnedOff;
 		}
 
 		//public virtual void Deactivate(Object id)
@@ -311,13 +343,8 @@ namespace Singularity.DataService.SqlFramework
 			SetEntityPrimaryKey(sqlEntity, Context.ExecuteScalar(insertStatement, new SqlParameter[] { }));
 		}
 
-		private void IdentityInsertCore(TSqlEntity sqlEntity, String insertColumns, String insertValues)
-		{
-			insertColumns = $"{GetIdentityInsertColumns()},{insertColumns}";
-			insertValues = $"{GetIdentityInsertValues(sqlEntity)},{insertValues}";
-			String insertStatement = IdentityInsertColumnsPattern.FormatX(TableName, insertColumns, insertValues, TableName);
-			Context.ExecuteScalar(insertStatement, new SqlParameter[] { });
-		}
+		private StringBuilder QueuedIdentityInserts => _queuedIdentityInserts ?? (_queuedIdentityInserts = new StringBuilder());
+		private StringBuilder _queuedIdentityInserts;
 
 		protected void UpdateCore(TSqlEntity sqlEntity, String updateColumnValuePairs, String updateKeyColumValuePair)
 		{
@@ -384,6 +411,10 @@ namespace Singularity.DataService.SqlFramework
 			{
 				result = Convert.ToInt32(nativeValue).ToString();
 			}
+			else if (nativeValue is Byte[])
+			{
+				result = (nativeValue as Byte[]).ToHexString();
+			}
 			else
 			{
 				result = nativeValue.ToString();
@@ -416,10 +447,19 @@ namespace Singularity.DataService.SqlFramework
 		protected abstract void SetEntityPrimaryKey(TSqlEntity sqlEntity, Object newPrimaryKey);
 
 		protected const String UpdateColumnValuePattern = "{0} = {1}";
-		private const String IdentityInsertColumnsPattern = "Set Identity_Insert dbo.{3} On; Insert [{0}] ({1}) Values({2}); Set Identity_Insert dbo.{3} Off";
+		private const String QueueIdentityInsertColumnsPattern = "Insert [{0}] ({1}) Values({2}); ";
+		private const String IdentityInsertColumnsPattern = "Set Identity_Insert dbo.{1} On; {0} Set Identity_Insert dbo.{1} Off";
 		private const String InsertColumnsPattern = "Insert [{0}] ({1}) Values({2}) SELECT @@IDENTITY";
 		private const String UpdateColumnsPattern = "Update [{0}] Set {1} Where {2}";
 		private const String StringValuePattern = "'{0}'";
 		private const String DateTimeFormat = "yyyy-MM-dd HH:mm:ss.fff";
+
+		enum EIdentityInserts
+		{
+			Unknown,
+			TurnedOn,
+			TurnedOff,
+		}
+		private EIdentityInserts EIdentityInsert { get; set; }
 	}
 }

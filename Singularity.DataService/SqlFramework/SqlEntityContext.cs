@@ -23,15 +23,20 @@ namespace Singularity.DataService.SqlFramework
 		{
 			_sqlConnectionStringBuilder = sqlConnectionStringBuilder;
 			_sqlConnection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
-			_sqlConnection.OpenEx(sqlConnectionStringBuilder.ConnectTimeout * 100);
+			_sqlConnection.OpenEx(sqlConnectionStringBuilder.ConnectTimeout * 1000);
 			_transactionCounter = 0;
 		}
 
 		public SqlEntityContext(SqlConnection sqlConnection)
 		{
+
+
 			_sqlConnection = sqlConnection;
 			_sqlConnectionStringBuilder = new SqlConnectionStringBuilder(sqlConnection.ConnectionString);
-			_sqlConnection.OpenEx(_sqlConnectionStringBuilder.ConnectTimeout * 100);
+			if (_sqlConnection.State == ConnectionState.Closed)
+			{
+				_sqlConnection.OpenEx(_sqlConnectionStringBuilder.ConnectTimeout * 1000);
+			}
 			_transactionCounter = 0;
 		}
 
