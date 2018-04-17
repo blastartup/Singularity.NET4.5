@@ -129,6 +129,8 @@ namespace Singularity.DataService.SqlFramework
 			return newClass;
 		}
 
+		protected static DateTime MinSqlDateTime => new DateTime(1753, 1, 1);
+
 		protected abstract void AssembleClassCore(TClass newClass);
 	}
 }

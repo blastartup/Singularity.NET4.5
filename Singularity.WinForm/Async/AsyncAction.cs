@@ -14,17 +14,17 @@ namespace Singularity.WinForm.Async
 			_view = view;
 		}
 
-		public void ExecAysnc(Action<T> asyncAction, AsyncCallback callback)
+		public void ExecAsync(Action<T> asyncAction, AsyncCallback callback)
 		{
 			asyncAction.BeginInvoke(_view, callback, asyncAction);
 		}
 
-		public void ExecAysnc(Action<T, Action<T>> asyncAction, AsyncCallback callback, Action<T> progressChanged)
+		public void ExecAsync(Action<T, Action<T>> asyncAction, AsyncCallback callback, Action<T> progressChanged)
 		{
 			asyncAction.BeginInvoke(_view, progressChanged, callback, asyncAction);
 		}
 
-		public void ExecAysnc(Action<T, Action<T>, Action<T>> asyncAction, AsyncCallback callback, Action<T> milestoneAchieved, Action<T> completing)
+		public void ExecAsync(Action<T, Action<T>, Action<T>> asyncAction, AsyncCallback callback, Action<T> milestoneAchieved, Action<T> completing)
 		{
 			asyncAction.BeginInvoke(_view, milestoneAchieved, completing, callback, asyncAction);
 		}

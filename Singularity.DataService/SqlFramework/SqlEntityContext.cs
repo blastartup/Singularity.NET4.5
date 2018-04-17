@@ -29,8 +29,6 @@ namespace Singularity.DataService.SqlFramework
 
 		public SqlEntityContext(SqlConnection sqlConnection)
 		{
-
-
 			_sqlConnection = sqlConnection;
 			_sqlConnectionStringBuilder = new SqlConnectionStringBuilder(sqlConnection.ConnectionString);
 			if (_sqlConnection.State == ConnectionState.Closed)

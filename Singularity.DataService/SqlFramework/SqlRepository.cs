@@ -203,14 +203,12 @@ namespace Singularity.DataService.SqlFramework
 		{
 			SqlCommand cmd = new SqlCommand($"Set Identity_Insert dbo.{TableName} On", Context.SqlConnection);
 			cmd.ExecuteNonQuery();
-			EIdentityInsert = EIdentityInserts.TurnedOn;
 		}
 
 		public void IdentityInsertOff()
 		{
 			SqlCommand cmd = new SqlCommand($"Set Identity_Insert dbo.{TableName} Off", Context.SqlConnection);
 			cmd.ExecuteNonQuery();
-			EIdentityInsert = EIdentityInserts.TurnedOff;
 		}
 
 		//public virtual void Deactivate(Object id)
@@ -453,13 +451,5 @@ namespace Singularity.DataService.SqlFramework
 		private const String UpdateColumnsPattern = "Update [{0}] Set {1} Where {2}";
 		private const String StringValuePattern = "'{0}'";
 		private const String DateTimeFormat = "yyyy-MM-dd HH:mm:ss.fff";
-
-		enum EIdentityInserts
-		{
-			Unknown,
-			TurnedOn,
-			TurnedOff,
-		}
-		private EIdentityInserts EIdentityInsert { get; set; }
 	}
 }

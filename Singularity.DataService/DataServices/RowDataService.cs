@@ -8,6 +8,15 @@ namespace Singularity.DataService.DataServices
 {
 	public abstract class RowDataService
 	{
-		public abstract void ProcessRow();
+		protected RowDataService(Object value)
+		{
+			_value = value;
+		}
+
+		// ReSharper disable once ConvertToAutoProperty
+		public Object Value => _value;
+		private readonly Object _value;
+
+		public abstract void UpdateKey(Int64 seed);
 	}
 }
