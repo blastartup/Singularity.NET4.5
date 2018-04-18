@@ -83,6 +83,7 @@
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Extensions\TypeExtension.cs" />
     <Compile Include="Extensions\SqlDbTypeExtension.cs" />
+    <Compile Include="Extensions\XmlReaderExtension.cs" />
     <Compile Include="FillTable.cs" />
     <Compile Include="Interfaces\IAddressable.cs" />
     <Compile Include="Interfaces\ICallable.cs" />
