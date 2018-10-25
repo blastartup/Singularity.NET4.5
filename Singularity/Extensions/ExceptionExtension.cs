@@ -16,12 +16,13 @@ namespace Singularity
 		/// </summary>
 		/// <param name="exception">An exception whose details you want to log as a single string.</param>
 		/// <returns>All the main properties of this exception and any inner exceptions as a single lined string.</returns>
+		[DebuggerStepThrough]
 		public static String ToLogString(this Exception exception)
 		{
-			String result = String.Empty;
+			var result = String.Empty;
 			if (exception != null) 
 			{
-				DelimitedStringBuilder message = new DelimitedStringBuilder();
+				var message = new DelimitedStringBuilder();
 				message.Add("Exception:{0}", exception.GetType().Name);
 				message.Add("Message:{0}", exception.Message);
 
@@ -55,9 +56,32 @@ namespace Singularity
 			return result;
 		}
 
+		/// <summary>
+		/// Return exception message including any inner exception messages only.
+		/// </summary>
+		/// <param name="exception">An exception whose message you want.</param>
+		/// <returns>Only the exception message and any inner exception messages.</returns>
+		[DebuggerStepThrough]
+		public static String AsMessageOnly(this Exception exception)
+		{
+			var result = String.Empty;
+			if (exception != null)
+			{
+				var message = new DelimitedStringBuilder();
+				message.Add(exception.Message);
+
+				if (exception.InnerException != null)
+				{
+					message.Add(exception.InnerException.AsMessageOnly());
+				}
+				result = message.ToDelimitedString("  ");
+			}
+			return result;
+		}
+
 		public static String LineNumber(this Exception exception)
 		{
-			StackTrace stackTrace = new StackTrace(exception, true);
+			var stackTrace = new StackTrace(exception, true);
 			StackFrame[] stackFrames = stackTrace.GetFrames();
 			if (stackFrames != null)
 			{
@@ -72,14 +96,14 @@ namespace Singularity
 
 		private static IEnumerable<T> GetStackTraceWorkFlow<T>(Exception exception)
 		{
-			List<T> traceSteps = new List<T>();
+			var traceSteps = new List<T>();
 			Type attributeType = typeof(T);
-			StackTrace stackTrace = new StackTrace(exception);
+			var stackTrace = new StackTrace(exception);
 			if (stackTrace.FrameCount > 0)
 			{
-				for (Int32 idx = stackTrace.FrameCount - 1; idx >= 0; idx--)
+				for (var idx = stackTrace.FrameCount - 1; idx >= 0; idx--)
 				{
-					Object attribute = stackTrace.GetFrame(idx).GetMethod().GetCustomAttributes(attributeType, false).FirstOrDefault();
+					var attribute = stackTrace.GetFrame(idx).GetMethod().GetCustomAttributes(attributeType, false).FirstOrDefault();
 					if (attribute != null)
 					{
 						traceSteps.Add((T)attribute);

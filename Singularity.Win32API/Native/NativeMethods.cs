@@ -12,7 +12,7 @@ namespace Singularity.Win32API
 	/// <summary>
 	/// NativeWin
 	/// </summary>
-	internal static class NativeMethods
+	public static class NativeMethods
 	{
 		#region RPCRT4.dll
 

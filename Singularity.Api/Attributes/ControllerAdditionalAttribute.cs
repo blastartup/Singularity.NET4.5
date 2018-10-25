@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Singularity.Api
 {
 	/// <summary>
-	/// Am attribute to implement or overrule how a property is genertated in a Dto and/or used by a Controller class.
+	/// Am attribute to implement or overrule how a property is generated in a DTO and/or used by a Controller class.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Property)]
 	public sealed class ControllerAdditionalAttribute : Attribute

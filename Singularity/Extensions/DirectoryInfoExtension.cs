@@ -51,8 +51,8 @@ namespace Singularity
 		/// Delete all the files and folders within the current folder but without deleting the current folder itself.
 		/// </summary>
 		/// <param name="folder">The folder you wish to clean.</param>
-		/// <param name="subFoldersOnly">Optionally choose to only delete subfolders and not files in this folder.  By default
-		/// files and subfolders are deleted.</param>
+		/// <param name="subFoldersOnly">Optionally choose to only delete sub folders and not files in this folder.  By default
+		/// files and sub folders are deleted.</param>
 		public static void Clean(this DirectoryInfo folder, Boolean subFoldersOnly = false)
 		{
 			if (!subFoldersOnly)

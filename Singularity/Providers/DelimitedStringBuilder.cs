@@ -176,9 +176,9 @@ namespace Singularity
 			return ToStringCore(String.Empty, startFieldIndex, count);
 		}
 
-		public WordCollection ToDelimitedWords(String delimiter = " ")
+		public Words ToDelimitedWords(String delimiter = " ")
 		{
-			return new WordCollection(_stringList, delimiter);
+			return new Words(_stringList, delimiter);
 		}
 
 		public String ToNewLineDelimitedString()

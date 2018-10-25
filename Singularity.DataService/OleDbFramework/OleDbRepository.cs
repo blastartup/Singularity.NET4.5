@@ -95,31 +95,31 @@ namespace Singularity.DataService.OleDbFramework
 				throw new ArgumentException("FilterParameters can only be applied to a filtered result.");
 			}
 
-			selectColumns = selectColumns ?? SelectAllColunms();
+			selectColumns = selectColumns ?? SelectAllColumns();
 			return AssembleClassList(SelectQuery(selectColumns, FromTables(), String.Empty, filter, filterParameters, orderBy, paging));
 		}
 
 		public List<TOleDbEntity> GetListByIds<T>(IEnumerable<T> ids, String selectColumns = null, String orderBy = null, Paging paging = null)
 		{
-			selectColumns = selectColumns ?? SelectAllColunms();
+			selectColumns = selectColumns ?? SelectAllColumns();
 			return AssembleClassList(SelectQuery(selectColumns, FromTables(), String.Empty, FilterIn(ids), null, orderBy, paging));
 		}
 
 		public virtual TOleDbEntity GetEntity(String filter = "", OleDbParameter[] filterParameters = null, String selectColumns = null)
 		{
-			selectColumns = selectColumns ?? SelectAllColunms();
+			selectColumns = selectColumns ?? SelectAllColumns();
 			return ReadAndAssembleClass(SelectQuery(selectColumns, FromTables(), String.Empty, filter, filterParameters, null, new Paging(1)));
 		}
 
 		public TOleDbEntity GetById(Object id, String selectColumns = null)
 		{
-			selectColumns = selectColumns ?? SelectAllColunms();
+			selectColumns = selectColumns ?? SelectAllColumns();
 			return ReadAndAssembleClass(SelectQuery(selectColumns, FromTables(), String.Empty, WhereClause(), Parameters(id)));
 		}
 
 		//public virtual Boolean Exists(String filter = "", SqlParameter[] filterParameters = null, String selectColumns = null)
 		//{
-		//	selectColumns = selectColumns ?? SelectAllColunms();
+		//	selectColumns = selectColumns ?? SelectAllColumns();
 		//	return SelectQuery(selectColumns, filter, filterParameters, null, new Paging(1)).HasRows;
 		//}
 
@@ -141,7 +141,7 @@ namespace Singularity.DataService.OleDbFramework
 				((ICreatable)sqlEntity).CreatedDate = NowDateTime;
 			}
 
-			InsertCore(sqlEntity, InsertColunms(), GetInsertValues(sqlEntity));
+			InsertCore(sqlEntity, InsertColumns(), GetInsertValues(sqlEntity));
 		}
 
 		public virtual void Update(TOleDbEntity sqlEntity)
@@ -275,7 +275,7 @@ namespace Singularity.DataService.OleDbFramework
 			Context.ExecScalar(updateStatement, new OleDbParameter[] { });
 		}
 
-		protected virtual String SelectAllColunms()
+		protected virtual String SelectAllColumns()
 		{
 			return "*";
 		}
@@ -308,7 +308,7 @@ namespace Singularity.DataService.OleDbFramework
 		protected abstract DateTime NowDateTime { get; }
 		protected abstract String TableName { get; }
 		protected abstract String PrimaryKeyName { get; }
-		protected abstract String InsertColunms();
+		protected abstract String InsertColumns();
 		protected abstract String GetInsertValues(TOleDbEntity sqlEntity);
 		protected abstract String GetUpdateColumnValuePairs(TOleDbEntity sqlEntity);
 		protected abstract String GetUpdateKeyColumnValuePair(TOleDbEntity sqlEntity);

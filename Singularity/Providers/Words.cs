@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Text.RegularExpressions;
-
+using System.Text;
+// ReSharper disable InheritdocConsiderUsage
 // ReSharper disable once CheckNamespace
 
 namespace Singularity
@@ -13,11 +13,11 @@ namespace Singularity
 	/// <summary>
 	/// A special class to handle worded text.
 	/// </summary>
-	//[DebuggerStepThrough]
+	[DebuggerStepThrough]
 	public class Words : IEnumerable<String>, ICloneable<Words>, IStateEmpty
 	{
 		/// <summary>
-		/// Instantiate an empty word delemiter.
+		/// Instantiate an empty word delimiter.
 		/// </summary>
 		[DebuggerHidden]
 		public Words()
@@ -31,11 +31,23 @@ namespace Singularity
 		/// </summary>
 		/// <param name="collection">A string collection of words.</param>
 		/// <param name="delimiter">The word delimiter which by default is a Space.</param>
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
 		[DebuggerHidden]
-		public Words(ICollection<String> collection, String delimiter = ValueLib.Space.StringValue) 
+		public Words(IEnumerable<String> collection, String delimiter = ValueLib.Space.StringValue)
 		{
 			_internalList = new List<String>(collection);
 			_delimiter = delimiter;
+		}
+
+		/// <summary>
+		/// Instantiate word handling of a given string List where the words are delimited by a space.
+		/// </summary>
+		/// <param name="collection">A string List of words.</param>
+		[DebuggerHidden]
+		public Words(List<String> collection)
+		{
+			_internalList = collection;
+			_delimiter = ValueLib.Space.StringValue;
 		}
 
 		/// <summary>
@@ -128,28 +140,78 @@ namespace Singularity
 		}
 
 		/// <summary>
+		/// Split a given command line type string where commands are separated by spaces, except when wrapped inside a double quoted command.
+		/// </summary>
+		/// <param name="commandLine"></param>
+		/// <returns></returns>
+		[DebuggerHidden]
+		public static Words FromCommandLine(String commandLine)
+		{
+			return new Words(Split(commandLine));
+		}
+
+		private static List<String> Split(String commandLine)
+		{
+			List<String> wordParts = new List<String>();
+			var partBuilder = new StringBuilder();
+			var insideDoubleQuotes = false;
+			foreach (Char c in commandLine)
+			{
+				if (c == ValueLib.DoubleQuotes.CharValue)
+				{
+					insideDoubleQuotes = !insideDoubleQuotes;
+					continue;
+				}
+
+				if (c == ValueLib.Space.CharValue && !insideDoubleQuotes)
+				{
+					wordParts.Add(partBuilder.ToString());
+					partBuilder = new StringBuilder();
+					continue;
+				}
+
+				partBuilder.Append(c);
+			}
+			wordParts.Add(partBuilder.ToString());
+			return wordParts;
+		}
+
+
+		/// <summary>
+		/// Add another words collection to this one.
+		/// </summary>
+		/// <param name="otherWords">The words collection to add.  It can have a different delimiter than this one has.</param>
+		[DebuggerHidden]
+		public void Add(Words otherWords)
+		{
+			_internalList.AddRange(otherWords);
+		}
+
+		/// <summary>
 		/// Add to Word Handlers together, returning a new Words with combined set of words.
 		/// </summary>
-		/// <param name="a"></param>
-		/// <param name="b"></param>
+		/// <param name="leftWords"></param>
+		/// <param name="rightWords"></param>
 		/// <returns></returns>
-		public static Words operator +(Words a, Words b)
+		[DebuggerHidden]
+		public static Words operator +(Words leftWords, Words rightWords)
 		{
 			return new Words
 			{
-				_delimiter = a._delimiter,
-				_internalList = new List<String>(a._internalList.Union(b._internalList))
+				_delimiter = leftWords._delimiter,
+				_internalList = new List<String>(leftWords._internalList.Union(rightWords._internalList))
 			};
 		}
 
 		/// <summary>
 		/// Implicitly cast Words to a String.
 		/// </summary>
-		/// <param name="w"></param>
+		/// <param name="words">Word collection to implicitly cast to a String.</param>
 		/// <returns></returns>
-		public static implicit operator String(Words w)
+		[DebuggerHidden]
+		public static implicit operator String(Words words)
 		{
-			return w.ToString();
+			return words.ToString();
 		}
 
 		/// <remarks>This is exception safe if the index is invalid.</remarks>
@@ -251,6 +313,7 @@ namespace Singularity
 			return result;
 		}
 
+		[DebuggerHidden]
 		public Words FormatWith(Object model, String beginTag = "{{", String endTag = "}}")
 		{
 			List<String> result = new List<String>(_internalList.Count);
@@ -280,6 +343,14 @@ namespace Singularity
 			return new Words(_internalList.GetRange(startIndex, count.GetValueOrDefault(_internalList.Count - startIndex).LimitMax(_internalList.Count - startIndex)), _delimiter);
 		}
 
+		[DebuggerHidden]
+		public static Words GetWords(String value, String delimiter, Int32 startIndex, Int32? count = null)
+		{
+			var words = new Words(value, delimiter);
+			return words.GetWords(startIndex, count);
+		}
+
+		[DebuggerHidden]
 		public Words GetRangeNonEmpty(Int32 startIndex, Int32? count = null)
 		{
 			Contract.Requires(startIndex >= 0);
@@ -318,6 +389,7 @@ namespace Singularity
 			return result;
 		}
 
+		[DebuggerHidden]
 		public Boolean InsertRange(Int32 index, Words words)
 		{
 			Contract.Requires(index >= 0);
@@ -335,17 +407,18 @@ namespace Singularity
 		[DebuggerHidden]
 		public String LastWord
 		{
-			get 
+			get
 			{
 				String result = String.Empty;
 				if (_internalList.Count > 0)
 				{
 					result = _internalList[_internalList.Count - 1];
 				}
-				return result; 
+				return result;
 			}
 		}
 
+		[DebuggerHidden]
 		public void Remove(Int32 index)
 		{
 			_internalList.RemoveAt(index);
@@ -439,23 +512,27 @@ namespace Singularity
 			return String.Join(_delimiter, _internalList.ToArray());
 		}
 
+		[DebuggerHidden]
 		public void UpdateRange(CodeRegion originalRegion, Words newWords)
 		{
 			RemoveRange(originalRegion.StartLineIndex + 1, (originalRegion.LineIndexCount - 2).LimitMin(1));
 			InsertRange(originalRegion.StartLineIndex + 1, newWords);
 		}
 
+		[DebuggerHidden]
 		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return _internalList.GetEnumerator();
 		}
 
+		[DebuggerHidden]
 		public String Delimiter
 		{
-			get { return _delimiter; }
-			set { _delimiter = value; }
+			get => _delimiter;
+			set => _delimiter = value;
 		}
 
+		[DebuggerHidden]
 		public Boolean IsEmpty => _internalList.IsEmpty();
 
 		private String _delimiter;

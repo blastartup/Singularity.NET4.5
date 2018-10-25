@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
@@ -32,31 +31,31 @@ namespace Singularity.DataService.SqlFramework
 				throw new ArgumentException("FilterParameters can only be applied to a filtered result.");
 			}
 
-			selectColumns = selectColumns ?? SelectAllColunms();
+			selectColumns = selectColumns ?? SelectAllColumns();
 			return AssembleClassList(SelectQuery(selectColumns, FromTables(), String.Empty, filter, filterParameters, orderBy, paging));
 		}
 
 		public List<TSqlEntity> GetListByIds<T>(IEnumerable<T> ids, String selectColumns = null, String orderBy = null, Paging paging = null)
 		{
-			selectColumns = selectColumns ?? SelectAllColunms();
+			selectColumns = selectColumns ?? SelectAllColumns();
 			return AssembleClassList(SelectQuery(selectColumns, FromTables(), String.Empty, FilterIn(ids), null, orderBy, paging));
 		}
 
 		public virtual TSqlEntity GetEntity(String filter = "", SqlParameter[] filterParameters = null, String selectColumns = null, String orderBy = null)
 		{
-			selectColumns = selectColumns ?? SelectAllColunms();
+			selectColumns = selectColumns ?? SelectAllColumns();
 			return ReadAndAssembleClass(SelectQuery(selectColumns, FromTables(), String.Empty, filter, filterParameters, orderBy, new Paging(1)));
 		}
 
 		public TSqlEntity GetById(Object id, String selectColumns = null)
 		{
-			selectColumns = selectColumns ?? SelectAllColunms();
+			selectColumns = selectColumns ?? SelectAllColumns();
 			return ReadAndAssembleClass(SelectQuery(selectColumns, FromTables(), String.Empty, WhereClause(), Parameters(id)));
 		}
 
 		//public virtual Boolean Exists(String filter = "", SqlParameter[] filterParameters = null, String selectColumns = null)
 		//{
-		//	selectColumns = selectColumns ?? SelectAllColunms();
+		//	selectColumns = selectColumns ?? SelectAllColumns();
 		//	return SelectQuery(selectColumns, filter, filterParameters, null, new Paging(1)).HasRows;
 		//}
 
@@ -78,11 +77,11 @@ namespace Singularity.DataService.SqlFramework
 				((ICreatable)sqlEntity).CreatedDate = NowDateTime;
 			}
 
-			InsertCore(sqlEntity, InsertColunms(), GetInsertValues(sqlEntity));
+			InsertCore(sqlEntity, InsertColumns(), GetInsertValues(sqlEntity));
 		}
 
 		/// <summary>
-		/// An immediate identity insert with indentity_insert on just for this single entity, unless queued is true.  Queued identity insert entities are inserted if nothing given.
+		/// An immediate identity insert with identity_insert on just for this single entity, unless queued is true.  Queued identity insert entities are inserted if nothing given.
 		/// </summary>
 		/// <param name="sqlEntity"></param>
 		public void IdentityInsert(TSqlEntity sqlEntity = null, Boolean queued = false)
@@ -104,7 +103,7 @@ namespace Singularity.DataService.SqlFramework
 			{
 				((ICreatable)sqlEntity).CreatedDate = NowDateTime;
 			}
-			var insertColumns = $"{GetIdentityInsertColumns()},{InsertColunms()}";
+			var insertColumns = $"{GetIdentityInsertColumns()},{InsertColumns()}";
 			var insertValues = $"{GetIdentityInsertValues(sqlEntity)},{GetInsertValues(sqlEntity)}";
 			QueuedIdentityInserts.Append(QueueIdentityInsertColumnsPattern.FormatX(TableName, insertColumns, insertValues));
 
@@ -296,6 +295,11 @@ namespace Singularity.DataService.SqlFramework
 			return AssembleClassList(Context.ExecuteDataReader(query, filterParameters));
 		}
 
+		public Boolean TableExists()
+		{
+			return Context.ExecuteScalar(TableExistsPattern.FormatX(FromTables())).ToBool();
+		}
+
 		protected SqlDataReader SelectQuery(String selectColumns, String fromTables, String join = "", String filter = "", SqlParameter[] filterParameters = null, String orderBy = null,
 			Paging paging = null)
 		{
@@ -344,14 +348,14 @@ namespace Singularity.DataService.SqlFramework
 		private StringBuilder QueuedIdentityInserts => _queuedIdentityInserts ?? (_queuedIdentityInserts = new StringBuilder());
 		private StringBuilder _queuedIdentityInserts;
 
-		protected void UpdateCore(TSqlEntity sqlEntity, String updateColumnValuePairs, String updateKeyColumValuePair)
+		protected void UpdateCore(TSqlEntity sqlEntity, String updateColumnValuePairs, String updateKeyColumnValuePair)
 		{
 			// NB: Don't need to update the primary key because it doesn't change nor is returned from an Update SQL query.
-			String updateStatement = UpdateColumnsPattern.FormatX(TableName, updateColumnValuePairs, updateKeyColumValuePair);
+			String updateStatement = UpdateColumnsPattern.FormatX(TableName, updateColumnValuePairs, updateKeyColumnValuePair);
 			Context.ExecuteScalar(updateStatement, new SqlParameter[] { });
 		}
 
-		protected virtual String SelectAllColunms()
+		protected virtual String SelectAllColumns()
 		{
 			return "*";
 		}
@@ -427,7 +431,7 @@ namespace Singularity.DataService.SqlFramework
 		protected abstract DateTime NowDateTime { get; }
 		protected abstract String TableName { get; }
 		protected abstract String PrimaryKeyName { get; }
-		protected abstract String InsertColunms();
+		protected abstract String InsertColumns();
 
 		protected virtual String GetIdentityInsertColumns()
 		{
@@ -451,5 +455,6 @@ namespace Singularity.DataService.SqlFramework
 		private const String UpdateColumnsPattern = "Update [{0}] Set {1} Where {2}";
 		private const String StringValuePattern = "'{0}'";
 		private const String DateTimeFormat = "yyyy-MM-dd HH:mm:ss.fff";
+		private const String TableExistsPattern = "If Exists (SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'{0}') Begin Print 1 End Else Begin Print 0 End";
 	}
 }

@@ -45,5 +45,12 @@ namespace Singularity
 			return sourceFileInfo.Name.Cut(ValueLib.FullStop.CharValue, false);
 		}
 
+		public static void SetInCurrentDirectoryIfRequired(this FileInfo sourceFileInfo)
+		{
+			if (sourceFileInfo.FullName.SubstringSafe(1, 1) != ValueLib.Colon.StringValue)
+			{
+				sourceFileInfo = new FileInfo(Path.Combine(Environment.CurrentDirectory, sourceFileInfo.FullName));
+			}
+		}
 	}
 }

@@ -59,6 +59,11 @@ namespace Singularity
 		public String Product => CustomAttributes<AssemblyProductAttribute>().Product;
 
 		/// <summary>
+		/// Assemblies configuration details.
+		/// </summary>
+		public String Configuration => CustomAttributes<AssemblyConfigurationAttribute>().Configuration;
+
+		/// <summary>
 		/// Assemblies copyright details.
 		/// </summary>
 		public String Copyright => CustomAttributes<AssemblyCopyrightAttribute>().Copyright;

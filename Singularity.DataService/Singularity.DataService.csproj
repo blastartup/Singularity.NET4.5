@@ -31,14 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
@@ -57,33 +49,21 @@
     <Compile Include="Attributes\OriginallyKnownAsAttribute.cs" />
     <Compile Include="DataServices\RowDataService.cs" />
     <Compile Include="DataServices\TableDataService.cs" />
-    <Compile Include="EntityFramework\EfDbContext.cs" />
-    <Compile Include="EntityFramework\EfRepository.cs" />
-    <Compile Include="EntityFramework\EfUnitOfWork.cs" />
     <Compile Include="CsvWriter.cs" />
     <Compile Include="DalException.cs" />
-    <Compile Include="EntityFramework\EfValidationResult.cs" />
     <Compile Include="Extensions\CsvWriterExtension.cs" />
     <Compile Include="Extensions\DataRowExtension.cs" />
     <Compile Include="Extensions\DataTableExtension.cs" />
-    <Compile Include="Extensions\DbReferenceEntryExtension.cs" />
-    <Compile Include="Extensions\DbCollectionEntryExtension.cs" />
-    <Compile Include="Extensions\EntityCollectionExtension.cs" />
-    <Compile Include="Extensions\EntityCollectionReferenceExtension.cs" />
     <Compile Include="Extensions\EntityICollectionExtension.cs" />
-    <Compile Include="Extensions\EntityObjectExtension.cs" />
-    <Compile Include="Extensions\EntityReferenceExtension.cs" />
     <Compile Include="Extensions\IOrderedEnumerableExtension.cs" />
     <Compile Include="Extensions\IQueryableExtension.cs" />
     <Compile Include="Extensions\LinqExtentions.cs" />
-    <Compile Include="Extensions\ObjectQueryExtenstion.cs" />
     <Compile Include="Extensions\DbTypeExtension.cs" />
     <Compile Include="Extensions\SqlConnectionExtension.cs" />
     <Compile Include="Extensions\SqlConnectionStringBuilderExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Extensions\TypeExtension.cs" />
     <Compile Include="Extensions\SqlDbTypeExtension.cs" />
-    <Compile Include="Extensions\XmlReaderExtension.cs" />
     <Compile Include="FillTable.cs" />
     <Compile Include="Interfaces\IAddressable.cs" />
     <Compile Include="Interfaces\ICallable.cs" />
@@ -92,6 +72,7 @@
     <Compile Include="Interfaces\ICreatable.cs" />
     <Compile Include="Interfaces\IImportable.cs" />
     <Compile Include="Interfaces\IItemisable.cs" />
+    <Compile Include="Interfaces\IVersionable.cs" />
     <Compile Include="Interfaces\IUsable.cs" />
     <Compile Include="Interfaces\IDeletable.cs" />
     <Compile Include="Interfaces\IDescribable.cs" />
@@ -116,7 +97,6 @@
     <Compile Include="SqlFramework\SqlEntityContext.cs" />
     <Compile Include="SqlFramework\SqlRepository.cs" />
     <Compile Include="SqlFramework\SqlUnitOfWork.cs" />
-    <Compile Include="UniqueCodeService\CodeServices\UniqueCodeService.cs" />
     <Compile Include="UniqueCodeService\Strageties\CodeStrategy.cs" />
     <Compile Include="UniqueCodeService\Strageties\UniqueCodeWithNoPrefixStrategy.cs" />
     <Compile Include="WriteToTextFile.cs" />
@@ -130,9 +110,7 @@
     <None Include="_CreateNewNuGetPackage\DoNotModify\UploadNuGetPackage.ps1" />
     <None Include="_CreateNewNuGetPackage\RunMeToUploadNuGetPackage.cmd" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ValueTypes\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Singularity\Singularity.csproj">
       <Project>{350f5c90-f18f-41a9-8b84-92e0ca74d619}</Project>
