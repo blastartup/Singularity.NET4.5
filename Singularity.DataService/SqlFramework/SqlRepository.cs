@@ -297,7 +297,7 @@ namespace Singularity.DataService.SqlFramework
 
 		public Boolean TableExists()
 		{
-			return Context.ExecuteScalar(TableExistsPattern.FormatX(FromTables())).ToBool();
+			return Context.TableExists(FromTables());
 		}
 
 		protected SqlDataReader SelectQuery(String selectColumns, String fromTables, String join = "", String filter = "", SqlParameter[] filterParameters = null, String orderBy = null,
@@ -455,6 +455,5 @@ namespace Singularity.DataService.SqlFramework
 		private const String UpdateColumnsPattern = "Update [{0}] Set {1} Where {2}";
 		private const String StringValuePattern = "'{0}'";
 		private const String DateTimeFormat = "yyyy-MM-dd HH:mm:ss.fff";
-		private const String TableExistsPattern = "If Exists (SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'{0}') Begin Print 1 End Else Begin Print 0 End";
 	}
 }

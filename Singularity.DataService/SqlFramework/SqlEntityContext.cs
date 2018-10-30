@@ -95,6 +95,11 @@ namespace Singularity.DataService.SqlFramework
 			}
 		}
 
+		public Boolean TableExists(String table)
+		{
+			return ExecuteScalar(TableExistsPattern.FormatX(table)).ToBool();
+		}
+
 		public void Dispose()
 		{
 			Dispose(true);
@@ -209,6 +214,7 @@ namespace Singularity.DataService.SqlFramework
 		private Boolean _disposed;
 		private String _errorMessage;
 		private readonly SqlConnectionStringBuilder _sqlConnectionStringBuilder;
+		private const String TableExistsPattern = "If Exists (SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'{0}') Begin Print 1 End Else Begin Print 0 End";
 
 	}
 }
