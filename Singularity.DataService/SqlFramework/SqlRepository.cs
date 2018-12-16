@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Singularity.DataService.SqlFramework
@@ -45,6 +43,16 @@ namespace Singularity.DataService.SqlFramework
 		{
 			selectColumns = selectColumns ?? SelectAllColumns();
 			return ReadAndAssembleClass(SelectQuery(selectColumns, FromTables(), String.Empty, filter, filterParameters, orderBy, new Paging(1)));
+		}
+
+		public List<TSqlEntity> GetListByQuery(String sqlQuery)
+		{
+			return AssembleClassList(Context.ExecuteDataReader(sqlQuery));
+		}
+
+		public IEnumerable<String> GenerateInsertSql(TSqlEntity sqlEntity)
+		{
+			return new[] { InsertColumnsPattern.FormatX(TableName, InsertColumns(), GetInsertValues(sqlEntity)), "GO", "" };
 		}
 
 		public TSqlEntity GetById(Object id, String selectColumns = null)
