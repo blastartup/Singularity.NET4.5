@@ -72,6 +72,7 @@
     <Compile Include="Interfaces\ICreatable.cs" />
     <Compile Include="Interfaces\IImportable.cs" />
     <Compile Include="Interfaces\IItemisable.cs" />
+    <Compile Include="Interfaces\ISqlGeneratable.cs" />
     <Compile Include="Interfaces\IVersionable.cs" />
     <Compile Include="Interfaces\IUsable.cs" />
     <Compile Include="Interfaces\IDeletable.cs" />

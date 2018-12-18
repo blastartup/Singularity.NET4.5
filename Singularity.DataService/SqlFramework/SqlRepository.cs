@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Singularity.DataService.SqlFramework
 {
-	public abstract class SqlRepository<TSqlEntity>
+	public abstract class SqlRepository<TSqlEntity> : ISqlGeneratable
 		where TSqlEntity : class
 	{
 		protected SqlEntityContext Context;
@@ -37,6 +37,16 @@ namespace Singularity.DataService.SqlFramework
 		{
 			selectColumns = selectColumns ?? SelectAllColumns();
 			return AssembleClassList(SelectQuery(selectColumns, FromTables(), String.Empty, FilterIn(ids), null, orderBy, paging));
+		}
+
+		public IEnumerable<String> GenerateInsertSql(Object sqlEntity)
+		{
+			return GenerateInsertSqlCore((TSqlEntity)sqlEntity);
+		}
+
+		private IEnumerable<String> GenerateInsertSqlCore(TSqlEntity sqlEntity)
+		{
+			return new[] { InsertColumnsPatternSansIdentity.FormatX(TableName, InsertColumns(), GetInsertValues(sqlEntity)), "GO", "" };
 		}
 
 		public virtual TSqlEntity GetEntity(String filter = "", SqlParameter[] filterParameters = null, String selectColumns = null, String orderBy = null)
@@ -460,6 +470,7 @@ namespace Singularity.DataService.SqlFramework
 		private const String QueueIdentityInsertColumnsPattern = "Insert [{0}] ({1}) Values({2}); ";
 		private const String IdentityInsertColumnsPattern = "Set Identity_Insert dbo.{1} On; {0} Set Identity_Insert dbo.{1} Off";
 		private const String InsertColumnsPattern = "Insert [{0}] ({1}) Values({2}) SELECT @@IDENTITY";
+		private const String InsertColumnsPatternSansIdentity = "Insert [{0}] ({1}) Values({2})";
 		private const String UpdateColumnsPattern = "Update [{0}] Set {1} Where {2}";
 		private const String StringValuePattern = "'{0}'";
 		private const String DateTimeFormat = "yyyy-MM-dd HH:mm:ss.fff";
