@@ -154,6 +154,7 @@ namespace Singularity.DataService.SqlFramework
 							_sqlConnection = new SqlConnection(_sqlConnectionStringBuilder.ConnectionString);
 							_sqlConnection.Open();
 							cmd.Connection = _sqlConnection;
+							cmd.CommandTimeout = CommandTimeout;
 							_transactionCounter = 0;
 						}
 					}
@@ -205,6 +206,8 @@ namespace Singularity.DataService.SqlFramework
 
 		public SqlConnection SqlConnection => _sqlConnection;
 		private SqlConnection _sqlConnection;
+
+		public virtual Int32 CommandTimeout => 30;
 
 		private const Int32 MaximumRetries = 3;
 		private const Int32 DelayOnError = 500;
