@@ -469,9 +469,9 @@ namespace Singularity.DataService.SqlFramework
 		protected const String UpdateColumnValuePattern = "{0} = {1}";
 		private const String QueueIdentityInsertColumnsPattern = "Insert [{0}] ({1}) Values({2}); ";
 		private const String IdentityInsertColumnsPattern = "Set Identity_Insert dbo.{1} On; {0} Set Identity_Insert dbo.{1} Off";
-		private const String InsertColumnsPattern = "Insert [{0}] ({1}) Values({2}) SELECT @@IDENTITY";
+		private const String InsertColumnsPattern = "Insert {0} ({1}) Values({2}) SELECT @@IDENTITY";
 		private const String InsertColumnsPatternSansIdentity = "Insert [{0}] ({1}) Values({2})";
-		private const String UpdateColumnsPattern = "Update [{0}] Set {1} Where {2}";
+		private const String UpdateColumnsPattern = "Update {0} Set {1} Where {2}";
 		private const String StringValuePattern = "'{0}'";
 		private const String DateTimeFormat = "yyyy-MM-dd HH:mm:ss.fff";
 	}
