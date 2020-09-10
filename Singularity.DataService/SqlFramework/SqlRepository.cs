@@ -321,6 +321,11 @@ namespace Singularity.DataService.SqlFramework
 		protected SqlDataReader SelectQuery(String selectColumns, String fromTables, String join = "", String filter = "", SqlParameter[] filterParameters = null, String orderBy = null,
 			Paging paging = null)
 		{
+			if (paging != null && orderBy == null)
+			{
+				throw new ArgumentException("Paging can only be applied to an ordered result.  Must provide an orderBy argument.");
+			}
+
 			String query = null;
 
 			if (!join.IsEmpty())
@@ -338,24 +343,19 @@ namespace Singularity.DataService.SqlFramework
 				filterParameters = new SqlParameter[] { };
 			}
 
-			if (!String.IsNullOrEmpty(orderBy))
-			{
-				orderBy = " Order By " + orderBy;
-			}
-			else
-			{
-				orderBy = String.Empty;
-			}
-
-			String takeFilter = String.Empty;
+			orderBy = orderBy == null ? String.Empty : OrderBySubClause + orderBy;
+			var pageBy = String.Empty;
 			if (paging != null)
 			{
-				takeFilter = $"Top {paging.Take} ";
+				pageBy = PagingSubClause;
+				filterParameters.AddRange(new SqlParameter[] { new SqlParameter("@Skip", paging.Skip), new SqlParameter("@Take", paging.Take) });
 			}
 
-			query = $"select {takeFilter}{selectColumns} from {fromTables}{join}{filter}{orderBy}";
+			query = $"select {selectColumns} from {fromTables}{join}{filter}{orderBy}{pageBy}";
 			return Context.ExecuteDataReader(query, filterParameters);
 		}
+		private const String OrderBySubClause = " Order By ";
+		private const String PagingSubClause = " OFFSET (@Skip) ROWS FETCH NEXT (@Take) ROWS ONLY ";
 
 		protected void InsertCore(TSqlEntity sqlEntity, String insertColumns, String insertValues)
 		{
