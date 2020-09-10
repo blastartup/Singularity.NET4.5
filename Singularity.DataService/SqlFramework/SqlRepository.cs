@@ -338,9 +338,14 @@ namespace Singularity.DataService.SqlFramework
 				filter = " where " + filter;
 			}
 
+			List<SqlParameter> sqlParameters = new List<SqlParameter>();
 			if (filterParameters == null)
 			{
-				filterParameters = new SqlParameter[] { };
+				sqlParameters = new List<SqlParameter>();
+			}
+			else
+			{
+				sqlParameters = new List<SqlParameter>(filterParameters);
 			}
 
 			orderBy = orderBy == null ? String.Empty : OrderBySubClause + orderBy;
@@ -348,11 +353,12 @@ namespace Singularity.DataService.SqlFramework
 			if (paging != null)
 			{
 				pageBy = PagingSubClause;
-				filterParameters.AddRange(new SqlParameter[] { new SqlParameter("@Skip", paging.Skip), new SqlParameter("@Take", paging.Take) });
+				sqlParameters.Add(new SqlParameter("@Skip", paging.Skip));
+				sqlParameters.Add(new SqlParameter("@Take", paging.Take));
 			}
 
 			query = $"select {selectColumns} from {fromTables}{join}{filter}{orderBy}{pageBy}";
-			return Context.ExecuteDataReader(query, filterParameters);
+			return Context.ExecuteDataReader(query, sqlParameters.ToArray());
 		}
 		private const String OrderBySubClause = " Order By ";
 		private const String PagingSubClause = " OFFSET (@Skip) ROWS FETCH NEXT (@Take) ROWS ONLY ";
