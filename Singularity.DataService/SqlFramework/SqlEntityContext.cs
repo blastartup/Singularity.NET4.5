@@ -37,6 +37,7 @@ namespace Singularity.DataService.SqlFramework
 		{
 			using (SqlCommand cmd = CreateCommand(query, CommandType.Text, filterParameters))
 			{
+				cmd.CommandTimeout = 0;
 				return ExecuteWithRetry(cmd, cmd.ExecuteReader);
 			}
 		}
@@ -45,6 +46,7 @@ namespace Singularity.DataService.SqlFramework
 		{
 			using (SqlCommand cmd = CreateCommand(query, CommandType.Text, filterParameters))
 			{
+				cmd.CommandTimeout = 0;
 				return ExecuteWithRetry(cmd, cmd.ExecuteScalar);
 			}
 		}
@@ -53,6 +55,7 @@ namespace Singularity.DataService.SqlFramework
 		{
 			using (SqlCommand cmd = CreateCommand(query, CommandType.Text, filterParameters))
 			{
+				cmd.CommandTimeout = 0;
 				return ExecuteWithRetry(cmd, cmd.ExecuteNonQuery);
 			}
 		}

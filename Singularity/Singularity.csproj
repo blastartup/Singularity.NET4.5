@@ -119,6 +119,7 @@
     <Compile Include="PowerWords.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\CommandLineParser.cs" />
+    <Compile Include="Providers\RegistryProvider.cs" />
     <Compile Include="Providers\Words.cs" />
     <Compile Include="Types\Cacher.cs" />
     <Compile Include="Providers\SystemClock.cs" />
@@ -128,6 +129,9 @@
     <Compile Include="Types\AssemblyInfo.cs" />
     <Compile Include="Types\Base\CodeRegion.cs" />
     <Compile Include="Types\ConciseAssembler.cs" />
+    <Compile Include="Types\RegistryBranch.cs" />
+    <Compile Include="Types\RegistryItem.cs" />
+    <Compile Include="Types\RegistryNode.cs" />
     <Compile Include="Types\VbCodeRegion.cs" />
     <Compile Include="Types\CSharpCodeRegion.cs" />
     <Compile Include="Types\FixedResponse.cs" />
